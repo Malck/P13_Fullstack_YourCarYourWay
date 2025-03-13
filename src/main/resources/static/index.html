@@ -1,11 +1,46 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POC Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>POC de chat </title>
+    <link rel="stylesheet" href="css/Style.css" />
 </head>
 <body>
-    
+<div id="username-page">
+    <div class="username-page-container">
+        <h1 class="title">Entrez votre nom pour rejoindre le chat</h1>
+        <form id="usernameForm" name="usernameForm">
+            <div class="form-group">
+                <label for="name"></label><input type="text" id="name" placeholder="Nom d'utilisateur" autocomplete="off" class="form-control" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="accent username-submit">Commencer</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="chat-page" class="chat-page hidden">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>POC de Chat </h2>
+        </div>
+        <div class="connecting">
+            Connexion en cours...
+        </div>
+        <ul id="messageArea">
+        </ul>
+        <form id="messageForm" name="messageForm">
+            <div class="form-group">
+                <div class="input-group clearfix">
+                    <input type="text" id="message" placeholder="Ecrivez votre message..." autocomplete="off" class="form-control"/>
+                    <button type="submit" class="primary">Envoyer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="js/App.js"></script>
 </body>
 </html>
