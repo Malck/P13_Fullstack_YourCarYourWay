@@ -13,20 +13,16 @@ import java.util.Objects;
 public class ChatController {
 
     /**
-     * @param chatMessage 
-     * @return the chat message.
+     * Reçoit un message de chat et le renvoie à tous les clients abonnés au topic public.
      */
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-    return chatMessage;
+        return chatMessage; // Renvoie le message tel quel à tous les clients
     }
 
-
     /**
-     * @param chatMessage 
-     * @param headerAccessor 
-     * @return the chat message.
+     * Ajoute un nouvel utilisateur au chat et envoie un message de bienvenue.
      */
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
@@ -34,10 +30,14 @@ public class ChatController {
             @Payload ChatMessage chatMessage,
             SimpMessageHeaderAccessor headerAccessor
     ) {
-
+        // Ajoute l'utilisateur à la session
         Objects.requireNonNull(headerAccessor.getSessionAttributes())
                .put("username", chatMessage.getSender());
-        
-        return chatMessage;
+
+        // Modifie le message pour indiquer que l'utilisateur a rejoint
+        chatMessage.setContent(chatMessage.getSender() + " a rejoint le chat !");
+        chatMessage.setType(ChatMessage.MessageType.JOIN);
+
+        return chatMessage; // Renvoie le message de bienvenue à tous les clients
     }
 }
