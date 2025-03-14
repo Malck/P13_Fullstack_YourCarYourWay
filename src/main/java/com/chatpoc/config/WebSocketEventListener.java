@@ -11,35 +11,31 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.Objects;
 
-/**
- * WebSocket event listener for handling WebSocket events.
- */
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class WebSocketEventListener {
 
-    private final SimpMessageSendingOperations messagingTemplate;
+    private final SimpMessageSendingOperations messagingTemplate; // Utilisé pour envoyer des messages WebSocket
 
-    /**
-     * @param event the disconnection event.
-     */
     @EventListener
     public void handleDisconnect(SessionDisconnectEvent event) {
-      StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-      String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
+        // Récupère les informations de session de l'utilisateur déconnecté
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
 
-      if (username != null) {
-        log.info("User disconnected: {}", username);
+        if (username != null) {
+            log.info("User disconnected: {}", username);
 
-        // Crée un message pour indiquer que l'utilisateur a quitté
-        ChatMessage chatMessage = ChatMessage.builder()
-                .type(ChatMessage.MessageType.LEAVE)
-                .sender(username)
-                .content(username + " a quitté le chat !")
-                .build();
-        messagingTemplate.convertAndSend("/topic/public", chatMessage);
+            // Crée un message pour informer que l'utilisateur a quitté le chat
+            ChatMessage chatMessage = ChatMessage.builder()
+                    .type(ChatMessage.MessageType.LEAVE)
+                    .sender(username)
+                    .content(username + " a quitté le chat !")
+                    .build();
+
+            // Envoie le message au topic public pour informer tous les clients
+            messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
 }
-
